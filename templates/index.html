@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Tasks - Home{% endblock %}
+
+{% block content %}
+    <h1>Daily Task List</h1>
+
+    <form action="/add" method="post" class="task-input-form">
+        <input type="text" name="content" class="task-input" placeholder="Add a new task..." required>
+        <button type="submit" class="add-button">Add Task</button>
+    </form>
+
+    <ul class="task-list">
+        {% for task in pending_tasks %}
+            <li class="task-item">
+                <form action="/toggle/{{ task.id }}" method="post" style="display:inline;">
+                    <input type="checkbox" onchange="this.form.submit()" class="task-checkbox" {% if task.completed %}checked{% endif %}>
+                </form>
+                <span class="task-content">{{ task.content }}</span>
+                <form action="/delete/{{ task.id }}" method="post" style="display:inline; margin-left: auto;">
+                    <button type="submit" class="delete-button">&#x2715;</button> <!-- Unicode 'X' for delete -->
+                </form>
+            </li>
+        {% endfor %}
+        {% for task in completed_tasks %}
+            <li class="task-item completed">
+                <form action="/toggle/{{ task.id }}" method="post" style="display:inline;">
+                    <input type="checkbox" onchange="this.form.submit()" class="task-checkbox" {% if task.completed %}checked{% endif %}>
+                </form>
+                <span class="task-content">{{ task.content }}</span>
+                <form action="/delete/{{ task.id }}" method="post" style="display:inline; margin-left: auto;">
+                    <button type="submit" class="delete-button">&#x2715;</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
